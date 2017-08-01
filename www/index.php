@@ -87,8 +87,8 @@
         Copyright <a href="mailto:Pascal@BayashiInJapan.net">
             P. Baillehache
         </a>, 2017, 
-        <a href="showStat.php">Statistics</a>, 
-        <a href="doc.pdf">Documentation</a>.
+        <a href="showStat.php" target="_blank">Statistics</a>, 
+        <a href="doc.pdf" target="_blank">Documentation</a>.
       </div>
 
     </div>
