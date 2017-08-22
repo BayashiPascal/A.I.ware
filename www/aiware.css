@@ -165,3 +165,73 @@ select {
   height: 200px;
 }
 
+#divSettings {
+  width: 100%;
+  margin: auto;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  visibility: hidden;
+}
+
+#divSettingsContent {
+  margin: auto;
+  margin-top: 40px;
+  width: 600px;
+  height: 400px;
+  border: 1px solid #888888;
+  background-color: #dddddd;
+  box-shadow: 0px 0px 15px #555555;
+  text-align: center;
+  overflow: auto;
+}
+
+#imgSettingsClose {
+  width: 50px;
+  height: 50px;
+  float: right;
+}
+
+#divSettingsTitle {
+  font-size: 25px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.divOneSetting {
+  margin: 10px;
+  padding-left: 20px;
+  text-align: center;
+}
+
+.imgSetting {
+  height: 200px;
+}
+
+#imgDisplayNbStone {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+}
+
+.divNbStoneHole {
+  position: absolute;
+  visibility: hidden;
+  font-weight: bold;
+}
+
+#rngSpeedAnimation {
+  vertical-align: middle;
+}
+
+#rngSpeedAnimation::-webkit-slider-runnable-track {
+  background: #eeeeee;
+  width: 100px;
+  border-radius: 5px;
+}
+
+#rngSpeedAnimation::-moz-range-track {
+  background: #eeeeee;
+  width: 100px;
+  border-radius: 5px;
+}
