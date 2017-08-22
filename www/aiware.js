@@ -30,6 +30,8 @@ function AIware() {
     this._level = 0;
     this._holes = new Array();
     this._stones = new Array();
+    // Flag to memorize display of number of stone in hole
+    this._displayNbStoneHole = false;
     // Init variables about the board graphics
     this._holeSize = 35.0;
     this._sizeStone = 30.0;
@@ -294,6 +296,8 @@ AIware.prototype.AddStoneToHole = function(iStone, iHole) {
       iStone;
     (this._holes[iHole]._nbStone)++;
     this._stones[iStone]._curHole = iHole;
+    var id = "#divNbStoneHole" + iHole;
+    $(id).html(this._holes[iHole]._nbStone);
   } catch (err) {
     console.log("AddStoneToHole " + err.stack);
   }
@@ -308,6 +312,8 @@ AIware.prototype.RemoveTopStoneFromHole = function(iHole) {
       (this._holes[iHole]._nbStone)--;
       iStone = this._holes[iHole]._stones[this._holes[iHole]._nbStone];
       this._stones[iStone]._curHole = -1;
+      var id = "#divNbStoneHole" + iHole;
+      $(id).html(this._holes[iHole]._nbStone);
     }
   } catch (err) {
     console.log("RemoveTopStoneFromHole " + err.stack);
@@ -378,7 +384,7 @@ AIware.prototype.UpdateInfo = function() {
     // Update the turn
     var turn = "";
     if (this._status == gameOver) {
-      turn += "Game Over ! ";
+      turn += "Game Over! ";
       if (this._score[0] == this._score[1]) {
         turn += "Tie";
       } else if (this._score[0] > this._score[1]) {
@@ -395,7 +401,7 @@ AIware.prototype.UpdateInfo = function() {
         this._status == gameChecking) {
         turn += "please wait";
       } else {
-        turn += "it's Human turn";
+        turn += "it's your turn";
       }
     } else {
       if (this._status == gameWaiting || 
@@ -706,6 +712,7 @@ AIware.prototype.GameOver = function() {
       }
       // Set the status of the game to over
       this._status = gameOver;
+      this._nbTurn = 0;
     }
   } catch (err) {
     console.log("GameOver " + err.stack);
@@ -802,6 +809,7 @@ AIware.prototype.RequestMoveFromAI = function() {
     }
     // Prepare the url for the PHP interfacing with the binary executable
     url = "./requestMove.php?arg=" + usrInput;
+console.log(url);
     // Create the HTTP request entity
     if (window.XMLHttpRequest) {
       xmlhttp = new XMLHttpRequest();
@@ -844,16 +852,36 @@ function BodyOnLoad() {
       if (iStone < 10) imgStone += "0";
       imgStone += iStone + ".gif')";
       div.style.backgroundImage = imgStone;
-      //div.innerHTML = iStone;
       $("#divBoard").append(div);
     }
     // Create the AIware entity
     theAIware = new AIware();
+    // Create the div to display the nb of stone in holes
+    for (var iPlayer = 0; iPlayer < nbPlayer; iPlayer++) {
+      for (var iHole = 0; iHole < nbHolePlayer; iHole++) {
+        var div = document.createElement("div");
+        div.setAttribute("class", "divNbStoneHole");
+        var id = "divNbStoneHole" + (iPlayer * nbHolePlayer + iHole);
+        div.setAttribute("id", id);
+        var xy = 
+          theAIware.GetCenterPosHole(iPlayer * nbHolePlayer + iHole);
+        xy._x += theAIware._holeSize;
+        xy._y += theAIware._holeSize;
+        var pos = "left:";
+        pos += xy._x;
+        pos += "px;top:";
+        pos += xy._y;
+        pos += "px;";
+        div.setAttribute("style", pos);
+        div.innerHTML = nbStoneHoleInit;
+        $("#divBoard").append(div);
+      }
+    }
     // Bind events
     document.onclick = documentOnClick;
     window.onbeforeunload = windowUnload;
     // Set tick function for animation
-    setInterval(HandTick, handTickInterval);
+    theAIware._handTickID = setInterval(HandTick, handTickInterval);
     // Preload images for fast rendering
     for (var iImg = 0; iImg < nbHole; iImg++) {
       preloadImg[iImg] = new Image();
@@ -988,3 +1016,56 @@ function HideRules() {
     console.log("HideRules() " + err.stack);
   }
 }
+
+// ------------ function to display the settings
+
+function ShowSettings() {
+  try {
+    $("#divSettings").css("visibility", "visible");
+  } catch (err) {
+    console.log("ShowSettings() " + err.stack);
+  }
+}
+
+// ------------ function to hide the rules
+
+function HideSettings() {
+  try {
+    $("#divSettings").css("visibility", "hidden");
+  } catch (err) {
+    console.log("HideSettings() " + err.stack);
+  }
+}
+
+// ------------ hook for the event onclick on imgDisplayNbStone
+
+function SwitchDisplayNbStoneHole() {
+  try {
+    if (theAIware._displayNbStoneHole == true) {
+      $(".divNbStoneHole").css("visibility", "hidden");
+      $("#imgDisplayNbStone").attr("src", "./Img/toggleOff.gif");
+      $("#spanDisplayNbStone").html("no");
+      theAIware._displayNbStoneHole = false;
+    } else {
+      $(".divNbStoneHole").css("visibility", "visible");
+      $("#imgDisplayNbStone").attr("src", "./Img/toggleOn.gif");
+      $("#spanDisplayNbStone").html("yes");
+      theAIware._displayNbStoneHole = true;
+    }
+  } catch (err) {
+    console.log("SwitchDisplayNbStoneHole() " + err.stack);
+  }
+}
+
+// ------------ hook for the event onchange on rngSpeedAnimation
+
+function SetSpeedAnimation() {
+  try {
+    handTickInterval = 100 - $("#rngSpeedAnimation").val();
+    clearInterval(theAIware._handTickID);
+    theAIware._handTickID = setInterval(HandTick, handTickInterval);
+  } catch (err) {
+    console.log("SetSpeedAnimation() " + err.stack);
+  }
+}
+
