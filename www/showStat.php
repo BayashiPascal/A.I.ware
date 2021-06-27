@@ -216,13 +216,13 @@ session_start();
 
       <!-- footer div -->
       <div id = "divFooter">
-        Copyright <a href="mailto:Pascal@BayashiInJapan.net">
+        Copyright <a href="mailto:baillehache.pascal@gmail.com">
             P. Baillehache
         </a>, 2017, 
-        <a href="index.php">A.I.ware</a>, 
-        <a href="doc.pdf">Documentation</a>.
+        <a href="showStat.php" target="_blank">Statistics</a>, 
+        <a href="doc.pdf" target="_blank">Documentation</a>, 
+        <a href="https://github.com/BayashiPascal/A.I.ware" target="_blank">GitHub</a>.
       </div>
-
     </div>
   </body>
 

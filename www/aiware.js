@@ -16,7 +16,7 @@ var gameOver = 1;
 var gameWaiting = 2;
 var gameChecking = 3;
 var zIndexSky = nbStone + 1;
-var handTickInterval = 100;
+var handTickInterval = 50;
 var stoneMaxSpeed = 30.0;
 var incSpeed = 0.5;
 var preloadImg = new Array();
@@ -881,6 +881,7 @@ function BodyOnLoad() {
     document.onclick = documentOnClick;
     window.onbeforeunload = windowUnload;
     // Set tick function for animation
+    $("#rngSpeedAnimation").val(50.0);
     theAIware._handTickID = setInterval(HandTick, handTickInterval);
     // Preload images for fast rendering
     for (var iImg = 0; iImg < nbHole; iImg++) {
@@ -889,6 +890,8 @@ function BodyOnLoad() {
     }
     preloadImg[nbHole] = new Image();
     preloadImg[nbHole].src = "./Img/board.jpg"
+    // Turn on the display of the number of stones in holes
+    SwitchDisplayNbStoneHole();
   } catch (err) {
     console.log("BodyOnLoad " + err.stack);
   }
@@ -923,8 +926,10 @@ function documentOnClick(event) {
   try {
     // Get the index of the clicked hole
     var divBoard = document.getElementById("divBoard");
-    var x = event.clientX - divBoard.offsetLeft;
-    var y = event.clientY - divBoard.offsetTop;
+    var x = event.clientX - divBoard.offsetLeft +
+      document.body.scrollLeft + window.pageXOffset;
+    var y = event.clientY - divBoard.offsetTop +
+      document.body.scrollTop + window.pageYOffset;
     var iHole = theAIware.GetHoleAtPos(x, y);
     var divBoard = document.getElementById('divBoard');
     if (iHole != -1) {
@@ -965,8 +970,10 @@ function documentOnSndClick(event) {
   try {
     // Get the index of the clicked hole
     var divBoard = document.getElementById("divBoard");
-    var x = event.clientX - divBoard.offsetLeft;
-    var y = event.clientY - divBoard.offsetTop;
+    var x = event.clientX - divBoard.offsetLeft +
+      document.body.scrollLeft + window.pageXOffset;
+    var y = event.clientY - divBoard.offsetTop +
+      document.body.scrollTop + window.pageYOffset;
     var iHole = theAIware.GetHoleAtPos(x, y);
     // If the user has clicked on the selected hole
     if (iHole != -1 && iHole == theAIware._selectedHole) {
@@ -1061,7 +1068,7 @@ function SwitchDisplayNbStoneHole() {
 
 function SetSpeedAnimation() {
   try {
-    handTickInterval = 100 - $("#rngSpeedAnimation").val();
+    handTickInterval = $("#rngSpeedAnimation").val();
     clearInterval(theAIware._handTickID);
     theAIware._handTickID = setInterval(HandTick, handTickInterval);
   } catch (err) {
